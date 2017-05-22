@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:orientation="vertical"
+android:layout_height="match_parent"
+android:padding="0dp"
+android:layout_width="match_parent"
+android:background="@drawable/light"
+android:gravity="left"
+android:weightSum="1">
+
+
+<TextView
+    android:id="@+id/textView2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:text="Recipient Email"
+    android:padding="5dp"
+    android:textColor="#000000"/>
+
+<EditText
+    android:id="@+id/editText8"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="textEmailAddress"
+    android:hint="Enter Email"
+    android:layout_below="@+id/textView2"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<TextView
+    android:id="@+id/textView3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_below="@+id/editText8"
+    android:layout_marginTop="12dp"
+    android:textColor="#000000"
+    android:padding="5dp"
+    android:text="Subject" />
+
+<EditText
+    android:id="@+id/editText9"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10"
+    android:inputType="textPersonName"
+    android:hint="Enter Subject here"
+    android:layout_below="@+id/textView3"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<TextView
+    android:id="@+id/textView4"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_below="@+id/editText9"
+    android:layout_marginTop="23dp"
+    android:textColor="#000000"
+    android:padding="5dp"
+    android:text="Message" />
+
+<EditText
+    android:id="@+id/editText10"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_marginTop="18dp"
+    android:ems="10"
+    android:hint="Write your message here:"
+    android:gravity="top"
+    android:inputType="textMultiLine"
+    android:layout_below="@+id/textView4"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true" />
+
+<Button
+    android:id="@+id/button5"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Send"
+    android:textColor="#ffffff"
+    android:background="#2424b9"
+    android:layout_below="@+id/editText10"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="24dp" />
+
+</RelativeLayout>
