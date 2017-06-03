@@ -16,13 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainActivity" />
-        <activity android:name=".Home"/>
-        <activity android:name=".Add_projects"/>
-        <activity android:name=".Weekly_update"/>
+        <activity android:name=".Projects" />
+        <activity android:name=".Home" />
+        <activity android:name=".Add_projects" />
+        <activity android:name=".Weekly_update" />
         <activity android:name=".Register" />
-        <activity android:name=".Reset_Password"></activity>
+        <activity android:name=".Reset_Password" />
+        <activity android:name=".Invite"></activity>
     </application>
 
 </manifest>

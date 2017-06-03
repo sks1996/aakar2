@@ -3,25 +3,39 @@ package com.example.a1405264.aakar_stm;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     public static Context Main;
     private FirebaseAuth mAuth;
+
+    private GoogleApiClient mGoogleApiClient;
+    private static final  String TAG    ="Register";
+
+
+    RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +47,41 @@ public class Home extends AppCompatActivity
 
         mAuth=FirebaseAuth.getInstance();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                startActivity(new Intent(Home.this, Add_projects.class));
-            }
-        });
+
+
+        //firebase Invites
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(AppInvite.API)
+                .enableAutoManage(this, this)
+                .build();
+
+        // Check for App Invite invitations and launch deep-link activity if possible.
+        // Requires that an Activity is registered in AndroidManifest.xml to handle
+        // deep-link URLs.
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(AppInviteInvitationResult result) {
+                                Log.d(TAG, "getInvitation:onResult:" + result.getStatus());
+                                if (result.getStatus().isSuccess()) {
+                                    // Extract information from the intent
+                                    Intent intent = result.getInvitationIntent();
+                                    String deepLink = AppInviteReferral.getDeepLink(intent);
+                                    String invitationId = AppInviteReferral.getInvitationId(intent);
+
+                                    // Because autoLaunchDeepLink = true we don't have to do anything
+                                    // here, but we could set that to false and manually choose
+                                    // an Activity to launch to handle the deep link here.
+                                    // ...
+                                }
+                            }
+                        });
+
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -91,6 +132,10 @@ public class Home extends AppCompatActivity
                 break;
 
             case R.id.send_app:
+
+                startActivity(new Intent(Home.this,Invite.class));
+                /*
+
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
@@ -99,6 +144,9 @@ public class Home extends AppCompatActivity
                 startActivity(sendIntent);
 
               //  startActivity(new Intent(this,Share_aap.class));
+
+
+              */
         }
 
         return super.onOptionsItemSelected(item);
@@ -114,7 +162,7 @@ public class Home extends AppCompatActivity
 
         if (id == R.id.currentproject) {
             // Handle the camera action
-           fragmentManager.beginTransaction().replace(R.id.content_frame, new Current_Projects()).commit();
+          startActivity(new Intent(Home.this,Projects.class));
         }
 
 
@@ -123,7 +171,10 @@ public class Home extends AppCompatActivity
 
         }
 
+        if (id == R.id.messenger) {
 
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new Message()).commit();
+        }
 
         if (id == R.id.mail) {
 
@@ -148,4 +199,16 @@ public class Home extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+
+        Snackbar snackbar = Snackbar
+                .make(relativeLayout, R.string.google_play_services_error, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
+    //    showMessage(getString(R.string.google_play_services_error));
+    }
+
 }

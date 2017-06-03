@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="43sp"
         android:textSize="30sp"
-        android:layout_below="@+id/tvl2"
         android:id="@+id/tvl1"/>
 
     <TextView
