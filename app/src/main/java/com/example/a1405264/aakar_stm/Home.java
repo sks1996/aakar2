@@ -162,7 +162,7 @@ public class Home extends AppCompatActivity
 
         if (id == R.id.currentproject) {
             // Handle the camera action
-          startActivity(new Intent(Home.this,Projects.class));
+            startActivity(new Intent(Home.this,Projects.class));
         }
 
 
@@ -173,7 +173,8 @@ public class Home extends AppCompatActivity
 
         if (id == R.id.messenger) {
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new Message()).commit();
+            startActivity(new Intent(Home.this,Task_To_Do.class));
+          //  fragmentManager.beginTransaction().replace(R.id.content_frame, new Message()).commit();
         }
 
         if (id == R.id.mail) {

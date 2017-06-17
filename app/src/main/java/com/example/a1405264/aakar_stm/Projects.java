@@ -3,7 +3,6 @@ package com.example.a1405264.aakar_stm;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,33 +18,35 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class Projects extends AppCompatActivity {
 
     private RecyclerView mBloglist;
-
     private DatabaseReference mDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.projects);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        if(toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
+        Toolbar tb = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(tb);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
-
+        mDatabase.orderByChild("timestamp");
 
         mBloglist=(RecyclerView) findViewById(R.id.blog_list);
         mBloglist.setHasFixedSize(true);
         mBloglist.setLayoutManager(new LinearLayoutManager(this));
+
+        // Now set the properties of the LinearLayoutManager
+
+// And now set it to the RecyclerView
+
+
     }
+
+
 
     @Override
     protected void onStart() {
@@ -55,17 +56,24 @@ public class Projects extends AppCompatActivity {
         FirebaseRecyclerAdapter<Blog, BlogViewHolder> firebaseRecyclerAdapter =new FirebaseRecyclerAdapter<Blog, BlogViewHolder>(
 
                 Blog.class,
-                R.layout.project_row,
+                R.layout.blog_row,
                 BlogViewHolder.class,
-                mDatabase
+                mDatabase.orderByChild("timestamp")
+
 
         ) {
+
+
+
+
             @Override
             protected void populateViewHolder(BlogViewHolder viewHolder, Blog model, int position) {
+
 
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setDesc(model.getDesc());
                 viewHolder.setDate(model.getDate());
+                viewHolder.setStatus(model.getStatus());
                 viewHolder.setImage(getApplicationContext(),model.getImage());
             }
 
@@ -102,14 +110,22 @@ public class Projects extends AppCompatActivity {
 
             TextView post_date = (TextView) mView.findViewById(R.id.post_date);
             post_date.setText(date);
+
         }
         public void setImage(Context ctx, String image){
             ImageView post_image=(ImageView) mView.findViewById(R.id.post_image);
             Picasso.with(ctx).load(image).into(post_image);
 
         }
+        public void setStatus(String status){
+
+            TextView post_title = (TextView) mView.findViewById(R.id.post_status);
+            post_title.setText(status);
+        }
+
 
     }
+
 
 
     public boolean onCreateOptionMenu(Menu menu){
@@ -135,4 +151,8 @@ public class Projects extends AppCompatActivity {
 
 
     }
+
+    //Requesting permission
+
+
 }

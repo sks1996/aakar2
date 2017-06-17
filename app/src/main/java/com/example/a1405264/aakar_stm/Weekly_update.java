@@ -81,7 +81,7 @@ public class Weekly_update extends AppCompatActivity {
 
                                         DatePicker datePicker = (DatePicker)dialog.findViewById(R.id.datepick);
                                         int day = datePicker.getDayOfMonth();
-                                        int month = datePicker.getMonth();
+                                        int month = datePicker.getMonth()+1;
                                         int year = datePicker.getYear();
 
                                         Date d = new Date();
@@ -127,8 +127,7 @@ public class Weekly_update extends AppCompatActivity {
 
                                  mContext = Weekly_update.this;
                                 final Dialog dialog1 = new Dialog(mContext);
-                                dialog1.setContentView(R.layout.custom_dialog1);
-                                dialog1.setTitle("Daily Work");
+                                dialog1.setContentView(R.layout.custom_dialog1);dialog1.setTitle("Daily Work");
 
                                 dialog1.show();
 
@@ -148,18 +147,22 @@ public class Weekly_update extends AppCompatActivity {
                                     @Override
                                     public void onClick(View view) {
 
-                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("WEEK WORK");
 
                                         //i want to get the xxx from the listview when i press the screen
-                                        Query applesQuery = ref.child("WEEK WORK").child("week").orderByChild("date").equalTo(date1);
+                                        Toast.makeText(Weekly_update.this,date1,Toast.LENGTH_LONG).show();
+                                        Query applesQuery = ref.child("week").orderByChild("date").equalTo(date1);
+
+                                    //    ref.child("WEEK WORK").child("week").child(date1).setValue("suraj");
 
                                         applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
 
-                                                    appleSnapshot.getRef().removeValue();
-                                                   // dialog1.dismiss();
+                                                    appleSnapshot.getRef().setValue(null);
+                                      //              appleSnapshot.getRef().setValue("COMPLETED");
+                                                    // dialog1.dismiss();
                                                 }
                                             }
 
@@ -257,7 +260,6 @@ public class Weekly_update extends AppCompatActivity {
                                 for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
 
 
-                                    
 
                                     appleSnapshot.getRef().removeValue();
 

@@ -5,19 +5,22 @@ package com.example.a1405264.aakar_stm;
  */
 
 public class Blog {
+
     private String title;
     private String desc;
     private String  Date;
     private String image;
+    private String status;
 
 
     public Blog(){
 
     }
 
-    public Blog(String title, String desc, String date, String image) {
+    public Blog(String title, String desc, String date,String status, String image) {
         this.title = title;
         this.desc = desc;
+        this.status=status;
         Date = date;
         this.image = image;
     }
@@ -52,5 +55,13 @@ public class Blog {
 
     public void setDate(String date) {
         Date = date;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
