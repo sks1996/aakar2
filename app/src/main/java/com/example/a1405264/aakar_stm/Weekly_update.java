@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -38,8 +39,11 @@ public class Weekly_update extends AppCompatActivity {
     private FloatingActionButton fab;
     ListView lv;
     List<Week_detail> week_details;
-
+    ArrayAdapter<String> adapter;
     DatabaseReference databaseReference;
+
+    public Weekly_update() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,13 @@ public class Weekly_update extends AppCompatActivity {
         setContentView(R.layout.activity_weekly_update);
 
         lv=(ListView)findViewById(R.id.lv);
+
+
+        //adapter for the List View
+        adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, android.R.id.text1);
+
+        // Assign adapter to ListView
+        lv.setAdapter(adapter);
       //  fab=(FloatingActionButton)findViewById(R.id.fab);
 
         week_details=new ArrayList<>();
@@ -55,6 +66,14 @@ public class Weekly_update extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("WEEK WORK").child("week");
 
         BottomNavigationView bnv=(BottomNavigationView)findViewById(R.id.bottom_navigation);
+
+
+
+
+        //child("WEEK WORK").orderByChild("date").equalTo("");
+
+
+
 
 
         bnv.setOnNavigationItemSelectedListener(
@@ -227,12 +246,16 @@ public class Weekly_update extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
 
-        Toast.makeText(Weekly_update.this,item.getTitle(),Toast.LENGTH_LONG).show();
+
+        Toast.makeText(this,""+info,Toast.LENGTH_LONG).show();
+
         switch (item.getItemId()) {
             case R.id.delete:
+
+
 
                 final AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle("R u sure??")
@@ -243,39 +266,53 @@ public class Weekly_update extends AppCompatActivity {
 
                 Button b=(Button)dialog.findViewById(R.id.cdb2);
 
+
+
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
+                                  int position  = info.position; // Get postion
+                                  Week_detail TO_DELETE=week_details.get(position);
+                                  String TO_DEL_REF=TO_DELETE.getId();
 
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-
-                        //i want to get the xxx from the listview when i press the screen
-                        Query applesQuery = ref.child("WEEK WORK").orderByChild("date").equalTo("xxxxx");
-
-
-                        applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                                  FirebaseDatabase.getInstance().getReference().child("Week Work").child("week").child(TO_DEL_REF).setValue(null);
 
 
 
-                                    appleSnapshot.getRef().removeValue();
+                        /*
+
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
 
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.e("fail 123..", "onCancelled", databaseError.toException());
-                            }
-                        });
 
 
+                                //i want to get the xxx from the listview when i press the screen
+                                Query applesQuery = ref.child("WEEK WORK").orderByChild("date").equalTo("");
+
+
+                                applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+
+
+                                            appleSnapshot.getRef().removeValue();
+
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.e("fail 123..", "onCancelled", databaseError.toException());
+                                    }
+                                });
+
+*/
 
                         dialog.dismiss();
+
 
                     }
 

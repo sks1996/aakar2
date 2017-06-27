@@ -3,11 +3,8 @@ package com.example.a1405264.aakar_stm;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,7 +24,6 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Calendar;
 
 public class Add_projects extends AppCompatActivity implements View.OnClickListener {
-
     Button btnDatePicker;
     EditText txtDate, txtTime;
     private int mYear, mMonth, mDay;
@@ -37,6 +33,7 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
     private EditText mPostdesc;
     private Button mSubmitBtn;
     private long timestamp;
+    String mystring="Add Image to your project";
 
     private Uri mImageUri =null;
 
@@ -46,8 +43,6 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference mDatabase;
 
     private ProgressDialog mProgress;
-    private int STORAGE_PERMISSION_CODE = 23;
-
 
 
 
@@ -55,9 +50,6 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_projects);
-
-
-
         btnDatePicker = (Button) findViewById(R.id.btn_date);
 
         txtDate = (EditText) findViewById(R.id.in_date);
@@ -84,7 +76,6 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
         mSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requestStoragePermission();
                 Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 galleryIntent.setType("image/*");
                 startActivityForResult(galleryIntent, GALLERY_REQUEST);
@@ -94,7 +85,15 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
         mSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startPosting();
+
+                if(mImageUri==null)
+                {
+
+                    Toast.makeText(getApplicationContext(),"Add Image to your Project",Toast.LENGTH_LONG).show();
+                }
+
+                else
+                    startPosting();
 
             }
         });
@@ -107,6 +106,7 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
         final String title_val = mPostTitle.getText().toString().trim();
         final String desc_val = mPostdesc.getText().toString().trim();
         final String date_val=txtDate.getText().toString().trim();
+
 
         if (!TextUtils.isEmpty(title_val) && !TextUtils.isEmpty(desc_val) && mImageUri != null) {
 
@@ -148,6 +148,10 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -155,6 +159,7 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
 
             mImageUri = data.getData();
             mSelectImage.setImageURI(mImageUri);
+
         }
 
     }
@@ -183,37 +188,5 @@ public class Add_projects extends AppCompatActivity implements View.OnClickListe
             datePickerDialog.show();
         }
     }
-
-    private void requestStoragePermission(){
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,android.Manifest.permission.READ_EXTERNAL_STORAGE)){
-            //If the user has denied the permission previously your code will come to this block
-            //Here you can explain why you need this permission
-            //Explain here why you need this permission
-        }
-
-        //And finally ask for the permission
-        ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
-    }
-
-    //This method will be called when the user will tap on allow or deny
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        //Checking the request code of our request
-        if(requestCode == STORAGE_PERMISSION_CODE){
-
-            //If permission is granted
-            if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
-                //Displaying a toast
-                Toast.makeText(this,"Permission granted now you can read the storage",Toast.LENGTH_LONG).show();
-            }else{
-                //Displaying another toast if permission is not granted
-                Toast.makeText(this,"Oops you just denied the permission", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
 }
 

@@ -55,7 +55,7 @@ public class Task_To_Do extends AppCompatActivity {
                     return;
                 }
 
-                if (enteredTask.length() < 6) {
+                if (enteredTask.length() < 4) {
                     Toast.makeText(Task_To_Do.this, "Task count must be more than 6", Toast.LENGTH_LONG).show();
                     return;
                 }

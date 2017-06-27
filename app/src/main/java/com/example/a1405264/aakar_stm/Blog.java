@@ -1,12 +1,12 @@
 package com.example.a1405264.aakar_stm;
 
 /**
- * Created by 1405264 on 5/29/2017.
+ * Created by Anas Khan on 5/27/2017.
  */
 
 public class Blog {
 
-    private String title;
+private String title;
     private String desc;
     private String  Date;
     private String image;

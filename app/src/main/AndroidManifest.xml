@@ -3,6 +3,7 @@
     package="com.example.a1405264.aakar_stm">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -25,7 +26,10 @@
         <activity android:name=".Register" />
         <activity android:name=".Reset_Password" />
         <activity android:name=".Invite" />
-        <activity android:name=".Task_To_Do"></activity>
+        <activity android:name=".Task_To_Do" />
+        <activity android:name=".Pro_Detail" />
+        <activity android:name=".Registration" />
+        <activity android:name=".Task_Assign"></activity>
     </application>
 
 </manifest>
