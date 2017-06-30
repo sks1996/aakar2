@@ -1,27 +1,23 @@
 package com.example.a1405264.aakar_stm;
 
-import android.app.Dialog;
-import android.content.Context;
+
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,181 +25,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+public  class Weekly_update extends AppCompatActivity {
 
-
-public class Weekly_update extends AppCompatActivity {
-    private FloatingActionButton fab;
-    ListView lv;
-    List<Week_detail> week_details;
-    ArrayAdapter<String> adapter;
+    private RecyclerView rc_name;
     DatabaseReference databaseReference;
-
-    public Weekly_update() {
-    }
-
+    FirebaseRecyclerAdapter<Week_detail,Holder> firebaseRecyclerAdapter;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
 
+
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weekly_update);
 
-        lv=(ListView)findViewById(R.id.lv);
+        databaseReference= FirebaseDatabase.getInstance().getReference();
 
-
-        //adapter for the List View
-        adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, android.R.id.text1);
-
-        // Assign adapter to ListView
-        lv.setAdapter(adapter);
-      //  fab=(FloatingActionButton)findViewById(R.id.fab);
-
-        week_details=new ArrayList<>();
-        registerForContextMenu(lv);
-        databaseReference = FirebaseDatabase.getInstance().getReference("WEEK WORK").child("week");
-
-        BottomNavigationView bnv=(BottomNavigationView)findViewById(R.id.bottom_navigation);
-
-
-
-
-        //child("WEEK WORK").orderByChild("date").equalTo("");
-
-
-
-
-
-        bnv.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.add_work:
-                                Context mContext = Weekly_update.this;
-                                final Dialog dialog = new Dialog(mContext);
-                                dialog.setContentView(R.layout.custom_dialog);
-                                dialog.setTitle("Daily Work");
-
-                                dialog.show();
-                                final EditText et=(
-                                        EditText)dialog.findViewById(R.id.text1);
-
-
-                                Button b=(Button)dialog.findViewById(R.id.cdb);
-
-                                b.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-
-                                        DatePicker datePicker = (DatePicker)dialog.findViewById(R.id.datepick);
-                                        int day = datePicker.getDayOfMonth();
-                                        int month = datePicker.getMonth()+1;
-                                        int year = datePicker.getYear();
-
-                                        Date d = new Date();
-                                        String weekday = (String) android.text.format.DateFormat.format("EEEE", d);
-
-                                        Toast.makeText(Weekly_update.this,weekday,Toast.LENGTH_LONG).show();
-
-                                        String date= Integer.toString(day)+"-"+ Integer.toString(month)+ "-"+Integer.toString(year);
-                                        String detail =et.getText().toString().trim();
-
-                                        if (detail=="Sunday") {
-                                            Calendar calender = Calendar.getInstance();
-                                            int ee=calender.get(Calendar.WEEK_OF_YEAR);
-                                            String up1="week"+Integer.toString(ee);
-                                            databaseReference = FirebaseDatabase.getInstance().getReference("WEEK WORK").child(up1);
-                                        }
-                                        else
-                                        {
-                                            databaseReference = FirebaseDatabase.getInstance().getReference("WEEK WORK").child("week");
-                                        }
-                                        if(!TextUtils.isEmpty(detail)){
-
-                                            String id=databaseReference.push().getKey();
-
-                                            Week_detail week_detail=new Week_detail(id,date,detail);
-
-                                            databaseReference.child(id).setValue(week_detail);
-
-                                            Toast.makeText(getApplicationContext(), "Data Entered", Toast.LENGTH_LONG).show();
-
-                                            dialog.dismiss();
-
-                                        }
-                                        else
-                                        {
-                                            Toast.makeText(getApplicationContext(), "Enter today's task", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-
-                                break;
-                            case R.id.action_update:
-
-                                 mContext = Weekly_update.this;
-                                final Dialog dialog1 = new Dialog(mContext);
-                                dialog1.setContentView(R.layout.custom_dialog1);dialog1.setTitle("Daily Work");
-
-                                dialog1.show();
-
-
-                                DatePicker datePicker = (DatePicker)dialog1.findViewById(R.id.datepick);
-                                int day = datePicker.getDayOfMonth();
-                                int month = datePicker.getMonth() + 1;
-                                int year = datePicker.getYear();
-
-
-                                final String date1= Integer.toString(day)+"-"+ Integer.toString(month)+ "-"+Integer.toString(year);
-
-
-                                Button ba=(Button)dialog1.findViewById(R.id.cdb1);
-
-                                ba.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-
-                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("WEEK WORK");
-
-                                        //i want to get the xxx from the listview when i press the screen
-                                        Toast.makeText(Weekly_update.this,date1,Toast.LENGTH_LONG).show();
-                                        Query applesQuery = ref.child("week").orderByChild("date").equalTo(date1);
-
-                                    //    ref.child("WEEK WORK").child("week").child(date1).setValue("suraj");
-
-                                        applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-
-                                                    appleSnapshot.getRef().setValue(null);
-                                      //              appleSnapshot.getRef().setValue("COMPLETED");
-                                                    // dialog1.dismiss();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                                Log.e("fail 123..", "onCancelled", databaseError.toException());
-                                                //dialog1.dismiss();
-                                            }
-                                        });
-                                        dialog1.dismiss();
-                                    }
-                                });
-
-                                break;
-                            case R.id.action_music:
-
-                                break;
-                        }
-                        return false;
-                    }
-                });
-
+        rc_name=(RecyclerView)findViewById(R.id.week_up);
+        rc_name.hasFixedSize();
+        rc_name.setLayoutManager(new LinearLayoutManager(this));
     }
 
 
@@ -211,29 +49,89 @@ public class Weekly_update extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<Week_detail,Holder>(
+                Week_detail.class,
+                R.layout.list_layout,
+                Holder.class,
+                databaseReference.child("WEEK WORK").child("week")
+        ) {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            protected void populateViewHolder(Holder viewHolder, Week_detail model, int position) {
+                viewHolder.setWork(model.getWork());
+                viewHolder.setDate(model.getDate());
+            }
+        };
+        rc_name.setAdapter(firebaseRecyclerAdapter);
+    }
 
-                week_details.clear();
+    public  static class Holder extends RecyclerView.ViewHolder
+    {
+        View mView;
+        public Holder(View itemView) {
+            super(itemView);
+            mView=itemView;
+//            mView.setOnCreateContextMenuListener((View.OnCreateContextMenuListener) mView.getContext());
 
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(mView.getContext(), android.R.style.Theme_Material_Dialog_Alert);
+                    } else {
+                        builder = new AlertDialog.Builder(mView.getContext());
+                    }
+                    builder.setTitle("Delete")
+                            .setMessage("Are you sure you want to delete this entry?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
 
-                for(DataSnapshot weeksnapshot :dataSnapshot.getChildren())
-                {
-                    Week_detail week_detail=weeksnapshot.getValue(Week_detail.class);
-                    week_details.add(week_detail);
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("WEEK WORK").child("week");
+
+                                    String s=((TextView)mView.findViewById(R.id.tvl1)).getText().toString();
+                                    //i want to get the xxx from the listview when i press the screen
+                                    //Toast.makeText(mView.getContext(),date1,Toast.LENGTH_LONG).show();
+                                    Query applesQuery = ref.orderByChild("work").equalTo(s);
+
+                                    //    ref.child("WEEK WORK").child("week").child(date1).setValue("suraj");
+
+                                    applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                                                appleSnapshot.getRef().removeValue();
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Log.e("fail 123..", "onCancelled", databaseError.toException());
+                                            //dialog1.dismiss();
+                                        }
+                                    });
+
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
+            });
 
-                Week_detail_list adapter =new Week_detail_list(Weekly_update.this, week_details);
-                lv.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        }
+        public  void setWork(String title)
+        {
+            TextView post_title=(TextView)mView.findViewById(R.id.tvl1);
+            post_title.setText(title);
+        }
+        public  void setDate(String desc)
+        {
+            TextView post_desc=(TextView)mView.findViewById(R.id.tvl2);
+            post_desc.setText(desc);
+        }
     }
 
     @Override
@@ -250,146 +148,16 @@ public class Weekly_update extends AppCompatActivity {
 
 
 
-        Toast.makeText(this,""+info,Toast.LENGTH_LONG).show();
+        Toast.makeText(this,""+info, Toast.LENGTH_LONG).show();
 
         switch (item.getItemId()) {
             case R.id.delete:
 
-
-
-                final AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle("R u sure??")
-                        .setView(R.layout.custom_dialog_delete)
-                        .create();
-
-                dialog.show();
-
-                Button b=(Button)dialog.findViewById(R.id.cdb2);
-
-
-
-                b.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                                  int position  = info.position; // Get postion
-                                  Week_detail TO_DELETE=week_details.get(position);
-                                  String TO_DEL_REF=TO_DELETE.getId();
-
-                                  FirebaseDatabase.getInstance().getReference().child("Week Work").child("week").child(TO_DEL_REF).setValue(null);
-
-
-
-                        /*
-
-                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-
-
-
-
-                                //i want to get the xxx from the listview when i press the screen
-                                Query applesQuery = ref.child("WEEK WORK").orderByChild("date").equalTo("");
-
-
-                                applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-
-
-                                            appleSnapshot.getRef().removeValue();
-
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Log.e("fail 123..", "onCancelled", databaseError.toException());
-                                    }
-                                });
-
-*/
-
-                        dialog.dismiss();
-
-
-                    }
-
-                });
-            default:
+                default:
                 return super.onContextItemSelected(item);
         }
 
     }
 
+
 }
-
-
-/*
-
-
-   fab.setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View view) {
-        Context mContext = Weekly_update.this;
-final Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.custom_dialog);
-        dialog.setTitle("Daily Work");
-
-        dialog.show();
-final EditText et=(
-        EditText)dialog.findViewById(R.id.text1);
-
-
-        Button b=(Button)dialog.findViewById(R.id.cdb);
-
-        b.setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View view) {
-
-        DatePicker datePicker = (DatePicker)dialog.findViewById(R.id.datepick);
-        int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth() + 1;
-        int year = datePicker.getYear();
-
-        Date d = new Date();
-        String weekday = (String) android.text.format.DateFormat.format("EEEE", d);
-
-        Toast.makeText(Weekly_update.this,weekday,Toast.LENGTH_LONG).show();
-
-        String date= Integer.toString(day)+"-"+ Integer.toString(month)+ "-"+Integer.toString(year);
-        String detail =et.getText().toString().trim();
-
-        if (detail=="Saturday") {
-        Calendar calender = Calendar.getInstance();
-        int ee=calender.get(Calendar.WEEK_OF_YEAR);
-        databaseReference = FirebaseDatabase.getInstance().getReference("WEEK WORK").child("week"+Integer.toString(ee));
-        }
-        else
-        {
-        databaseReference = FirebaseDatabase.getInstance().getReference("WEEK WORK").child("week");
-        }
-        if(!TextUtils.isEmpty(detail)){
-
-        String id=databaseReference.push().getKey();
-
-        Week_detail week_detail=new Week_detail(id,date,detail);
-
-        databaseReference.child(id).setValue(week_detail);
-
-        Toast.makeText(getApplicationContext(), "Data Entered", Toast.LENGTH_LONG).show();
-
-        dialog.dismiss();
-
-        }
-        else
-        {
-        Toast.makeText(getApplicationContext(), "Enter today's task", Toast.LENGTH_LONG).show();
-        }
-        }
-        });
-        }
-        }); */
-
-

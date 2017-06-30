@@ -76,11 +76,7 @@ public class Projects extends AppCompatActivity {
                 BlogViewHolder.class,
                 mDatabase.orderByChild("timestamp")
 
-
-
         ) {
-
-
 
 
             @Override
@@ -179,14 +175,6 @@ public class Projects extends AppCompatActivity {
 
     }
 
-
-
-    public boolean onCreateOptionMenu(Menu menu){
-
-        getMenuInflater().inflate(R.menu.main_menu,menu);
-        return super.onCreateOptionsMenu(menu);
-
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main_menu,menu);

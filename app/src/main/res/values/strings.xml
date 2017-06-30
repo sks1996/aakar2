@@ -9,6 +9,11 @@
         com.google.android.gms.samples.appinvite.DEEP_LINK_ACTION
     </string>
 
+
+
+    <string name="text_with_bullet">Text with a \u2022</string>
+
+
     <string name="invite">Send invitations!</string>
     <string name="welcome">Invites</string>
     <string name="referrer_hint">Deep link not provided</string>

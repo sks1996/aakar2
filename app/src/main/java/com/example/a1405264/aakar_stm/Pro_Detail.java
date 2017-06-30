@@ -1,16 +1,25 @@
 package com.example.a1405264.aakar_stm;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +42,11 @@ public class Pro_Detail extends AppCompatActivity {
     ImageView image_iv;
     Bitmap bmp;
     DatabaseReference ref;
+    private PopupWindow mPopupWindow;
+
+
+    Button pop;
+    Context context;
 
     Bitmap convert(byte[] bitmapdata)
 
@@ -47,7 +61,7 @@ public class Pro_Detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pro__detail);
         ref = FirebaseDatabase.getInstance().getReference();
-
+        pop=(Button)findViewById(R.id.pop);
 
         Log.d("image","activity created");
 
@@ -60,6 +74,8 @@ public class Pro_Detail extends AppCompatActivity {
         String titleString=title_data.get("title").toString();
         String desc=title_data.get("description").toString();
         String date=title_data.get("date").toString();
+
+        context = getApplicationContext();
 
         byte[] b=getIntent().getBundleExtra("bundle").getByteArray("image");
         Log.d("image is-",""+b);
@@ -208,7 +224,7 @@ public class Pro_Detail extends AppCompatActivity {
                     }
                 });
 
-                Spinner areaSpinner = (Spinner)dialog.findViewById(R.id.spinner);
+             //   Spinner areaSpinner = (Spinner)dialog.findViewById(R.id.spinner);
 
                 add.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -231,5 +247,77 @@ public class Pro_Detail extends AppCompatActivity {
 
         });
 
+
+        pop.setOnClickListener  (new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Dialog dialog = new Dialog(Pro_Detail.this);
+                dialog.setContentView(R.layout.pop_window);
+
+
+                final ListView lv=(ListView)dialog.findViewById(R.id.ls);
+
+                final ArrayList<String> use_name = new ArrayList<>();
+
+                ref.child("Users").addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
+
+                           String areaName = areaSnapshot.child("name").getValue(String.class);
+
+                            use_name.add(areaName);
+                        }
+
+
+                        ArrayAdapter<String> adapter =
+                                new ArrayAdapter<>(Pro_Detail.this, android.R.layout.simple_list_item_1, use_name);
+                        lv.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                Window window = dialog.getWindow();
+                WindowManager.LayoutParams wlp = window.getAttributes();
+                wlp.gravity = Gravity.TOP | Gravity.LEFT;
+
+                wlp.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                window.setAttributes(wlp);
+
+                ImageButton closeButton = (ImageButton)dialog.findViewById(R.id.ib_close);
+
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Dismiss the popup window
+                        dialog.dismiss();
+                    }
+                });
+
+
+                Button all_user=(Button)dialog.findViewById(R.id.all_user);
+
+                all_user.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        startActivity(new Intent(Pro_Detail.this, Users.class));
+                        dialog.dismiss();
+
+                    }
+                });
+
+                dialog.show();
+            }
+        });
     }
 }

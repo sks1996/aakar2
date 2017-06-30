@@ -4,6 +4,8 @@ public class Week_detail
 
 {
     String id;
+
+
     String work;
     String date;
 
@@ -29,6 +31,15 @@ public class Week_detail
 
     public String getDate() {return date;
     }
+
+    public void setWork(String work) {
+        this.work = work;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
 
 
 }

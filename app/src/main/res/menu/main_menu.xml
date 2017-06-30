@@ -4,6 +4,6 @@
     <item android:id="@+id/action_add"
         android:icon="@drawable/ic_add_2x"
         android:title="Add Post"
-        app:showAsAction="always"/>
+        app:showAsAction="never"/>
 
 </menu>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/del"
+        android:title="Delete"/>
+
+    <item
+        android:id="@+id/task"
+        android:title="Task"/>
+
+    <item
+        android:id="@+id/work"
+        android:title="weeks_work" />
+
+</menu>
