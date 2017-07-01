@@ -237,7 +237,7 @@ public class Pro_Detail extends AppCompatActivity {
                         String status="not done";
 
                         TasK_try ob=new TasK_try(task1,name1,status);
-                        ref.child("Task").child(userId).setValue(ob);
+                        ref.child("Task").child("task1").child(userId).setValue(ob);
 
                         dialog.dismiss();
                     }

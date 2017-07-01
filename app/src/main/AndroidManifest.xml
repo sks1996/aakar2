@@ -30,7 +30,32 @@
         <activity android:name=".Pro_Detail" />
         <activity android:name=".Registration" />
         <activity android:name=".Task_Assign" />
-        <activity android:name=".Users"></activity>
+        <activity android:name=".Users" />
+
+        <receiver
+            android:name=".BroadcastReceieverNServices.NotificationSender"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="New_Notification" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".BroadcastReceieverNServices.Notification_search"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".BroadcastReceieverNServices.Notification"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="Send_notification_now" />
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

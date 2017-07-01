@@ -21,7 +21,7 @@ public class Task_Assign extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task__assign);
 
-        databaseReference= FirebaseDatabase.getInstance().getReference().child("Task");
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("Task").child("task1");
 
         tasklist=(RecyclerView)findViewById(R.id.task_list);
         tasklist.hasFixedSize();

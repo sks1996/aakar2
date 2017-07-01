@@ -47,4 +47,8 @@ public class TasK_try {
 
     }
 
+    @Override
+    public String toString() {
+        return this.status+":"+this.name+":"+this.task+":";
+    }
 }
