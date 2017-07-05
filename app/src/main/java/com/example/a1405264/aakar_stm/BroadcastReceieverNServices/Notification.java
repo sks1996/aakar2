@@ -11,6 +11,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.a1405264.aakar_stm.Home;
+import com.example.a1405264.aakar_stm.R;
 
 public class Notification extends BroadcastReceiver {
 
@@ -30,8 +31,8 @@ public class Notification extends BroadcastReceiver {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(context).setContentIntent(pendingIntent)
-                .setSmallIcon(android.R.drawable.ic_lock_lock)
-                .setContentTitle("TNP")
+                .setSmallIcon(R.drawable.notify)
+                .setContentTitle("Aakar")
                 .setContentText(MessageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

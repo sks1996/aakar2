@@ -9,16 +9,22 @@ public class TasK_try {
     String task;
     String name;
     String status;
+    String desc;
 
 
     public   TasK_try(){
 
     }
-    public  TasK_try(String task,String name, String status)
+
+
+
+    public  TasK_try(String task, String name, String desc, String status)
     {
         this.task=task;
         this.name=name;
         this.status=status;
+
+        this.desc=desc;
     }
 
 
@@ -42,9 +48,10 @@ public class TasK_try {
         this.status = status;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatus() { return status;}
+    public String getDesc() { return desc; }
 
+    public void setDesc(String desc) { this.desc = desc;
     }
 
     @Override

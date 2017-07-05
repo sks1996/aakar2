@@ -65,7 +65,6 @@ public class Pro_Detail extends AppCompatActivity {
 
         Log.d("image","activity created");
 
-
         title_tv=(TextView) findViewById(R.id.title_tv);
         desc_tv=(TextView) findViewById(R.id.desc_tv);
         image_iv=(ImageView)findViewById(R.id.image_iv);
@@ -81,17 +80,11 @@ public class Pro_Detail extends AppCompatActivity {
         Log.d("image is-",""+b);
         image_iv.setImageBitmap(convert(b));
 
-
-
-
         title_tv.setText(titleString);
         desc_tv.setText(desc);
         date_tv.setText(date);
 
-
-
         //for FAB
-
         ImageView icon = new ImageView(this);
         icon.setImageResource(R.drawable.ic_add_2x);
 
@@ -128,9 +121,6 @@ public class Pro_Detail extends AppCompatActivity {
                 .addSubActionView(button3)
                 .attachTo(actionButton)
                 .build();
-
-
-
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +186,8 @@ public class Pro_Detail extends AppCompatActivity {
                 final EditText task=(EditText)dialog.findViewById(R.id.task_name) ;
                 Button add=(Button)dialog.findViewById(R.id.add);
 
+                final EditText desc=(EditText)dialog.findViewById(R.id.task_dec);
+
                 final Spinner spinner = (Spinner)dialog.findViewById(R.id.spinner);
 
                 ref.child("Users").addValueEventListener(new ValueEventListener() {
@@ -234,9 +226,10 @@ public class Pro_Detail extends AppCompatActivity {
 
                         String task1=task.getText().toString().trim();
                         String name1=spinner.getSelectedItem().toString().trim();
+                        String des=desc.getText().toString().trim();
                         String status="not done";
 
-                        TasK_try ob=new TasK_try(task1,name1,status);
+                        TasK_try ob=new TasK_try(task1,name1,des,status);
                         ref.child("Task").child("task1").child(userId).setValue(ob);
 
                         dialog.dismiss();
