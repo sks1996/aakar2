@@ -1,5 +1,6 @@
 package com.example.a1405264.aakar_stm;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +37,9 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Pro_Detail extends AppCompatActivity {
 
@@ -43,6 +48,8 @@ public class Pro_Detail extends AppCompatActivity {
     Bitmap bmp;
     DatabaseReference ref;
     private PopupWindow mPopupWindow;
+    public static Activity THIS_;
+    public static HashMap<Integer,String> Tasks;
 
 
     Button pop;
@@ -63,6 +70,9 @@ public class Pro_Detail extends AppCompatActivity {
         ref = FirebaseDatabase.getInstance().getReference();
         pop=(Button)findViewById(R.id.pop);
 
+        Tasks=new HashMap<>();
+
+        THIS_=this;
         Log.d("image","activity created");
 
         title_tv=(TextView) findViewById(R.id.title_tv);
@@ -196,7 +206,7 @@ public class Pro_Detail extends AppCompatActivity {
                         // Is better to use a List, because you don't know the size
                         // of the iterator returned by dataSnapshot.getChildren() to
                         // initialize the array
-                        final List<String> areas = new ArrayList<String>();
+                        final ArrayList<String> areas = new ArrayList<String>();
 
                         for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
                             String areaName = areaSnapshot.child("name").getValue(String.class);
@@ -207,7 +217,9 @@ public class Pro_Detail extends AppCompatActivity {
                         ArrayAdapter<String> adapter =
                                 new ArrayAdapter<>(Pro_Detail.this, android.R.layout.simple_spinner_item, areas);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.setAdapter(adapter);
+                       // spinner.setAdapter(adapter);
+
+                        spinner.setAdapter(new com.example.a1405264.aakar_stm.Adapters.SpinnerAdapter(Pro_Detail.this,R.layout.spinner_row,areas));
                     }
 
                     @Override
@@ -224,13 +236,21 @@ public class Pro_Detail extends AppCompatActivity {
 
                         String userId = ref.push().getKey();
 
-                        String task1=task.getText().toString().trim();
-                        String name1=spinner.getSelectedItem().toString().trim();
-                        String des=desc.getText().toString().trim();
-                        String status="not done";
+                        dialog.show();
+                        for(Map.Entry<Integer,String> entry:Tasks.entrySet())
+                        {
 
-                        TasK_try ob=new TasK_try(task1,name1,des,status);
-                        ref.child("Task").child("task1").child(userId).setValue(ob);
+                            String task1=task.getText().toString().trim();
+                            String name1=entry.getValue();
+                            String des=desc.getText().toString().trim();
+                            String status="not done";
+
+                            TasK_try ob=new TasK_try(task1,name1,des,status);
+                            ref.child("Task").child("task1").child(userId).setValue(ob);
+
+                        }
+                        Tasks.clear();
+
 
                         dialog.dismiss();
                     }
