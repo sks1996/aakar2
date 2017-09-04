@@ -1,6 +1,8 @@
 package com.example.a1405264.aakar_stm;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -34,7 +36,6 @@ public class Users extends AppCompatActivity {
         setContentView(R.layout.activity_users);
 
         databaseReference= FirebaseDatabase.getInstance().getReference();
-
         rc_name=(RecyclerView)findViewById(R.id.rc_name);
         rc_name.hasFixedSize();
         rc_name.setLayoutManager(new LinearLayoutManager(this));
@@ -73,19 +74,17 @@ public class Users extends AppCompatActivity {
 
             mView.getId();
 
-
-
-
             pop.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(final View view) {
 
                     PopupMenu popup = new PopupMenu(mView.getContext(), pop);
                     //Inflating the Popup using xml file
                     popup.getMenuInflater()
                             .inflate(R.menu.edit_user, popup.getMenu());
 
-                    //registering popup with OnMenuItemClickListener
+
+                    //edit_user is the popup menu
 
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
@@ -101,21 +100,17 @@ public class Users extends AppCompatActivity {
                                     } else {
                                         builder = new AlertDialog.Builder(mView.getContext());
                                     }
-                                    builder.setTitle("Delete")
-                                            .setMessage("Are you sure you want to delete this entry?")
+                                    builder.setTitle("Delete User")
+                                            .setMessage("Are you sure you want to remove this user?")
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
 
-
                                                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
-
                                                     String s=((TextView)mView.findViewById(R.id.name)).getText().toString();
                                                     //i want to get the xxx from the listview when i press the screen
                                                     //Toast.makeText(mView.getContext(),date1,Toast.LENGTH_LONG).show();
                                                     Query applesQuery = ref.orderByChild("name").equalTo(s);
-
                                                     //    ref.child("WEEK WORK").child("week").child(date1).setValue("suraj");
-
                                                     applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -123,14 +118,12 @@ public class Users extends AppCompatActivity {
                                                                 appleSnapshot.getRef().removeValue();
                                                             }
                                                         }
-
                                                         @Override
                                                         public void onCancelled(DatabaseError databaseError) {
                                                             Log.e("fail 123..", "onCancelled", databaseError.toException());
                                                             //dialog1.dismiss();
                                                         }
                                                     });
-
                                                 }
                                             })
                                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -140,6 +133,17 @@ public class Users extends AppCompatActivity {
                                             })
                                             .setIcon(android.R.drawable.ic_dialog_alert)
                                             .show();
+
+                                case  R.id.work:
+
+                                    TextView post_title=(TextView)mView.findViewById(R.id.name);
+                                    String name=post_title.getText().toString();
+                                    Context context = view.getContext();
+                                    Bundle bundle=new Bundle();
+                                    bundle.putString("name", name);
+                                    Intent intent = new Intent(context, Weekly_update_in_project.class).putExtras(bundle);
+                                  //  Toast.makeText(context,name,Toast.LENGTH_LONG).show();
+                                    context.startActivity(intent);
                             }
                             return true;
                         }

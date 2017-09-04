@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton;
@@ -88,6 +89,12 @@ public  class Weekly_update extends AppCompatActivity {
                         String date= Integer.toString(day)+"-"+ Integer.toString(month)+ "-"+Integer.toString(year);
                         String detail =et.getText().toString().trim();
 
+
+                        String currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid() ;
+
+                        databaseReference = FirebaseDatabase.getInstance().getReference("WEEK WORK").child("week").child(currentFirebaseUser);
+
+/*
                         if (detail=="Sunday") {
                             Calendar calender = Calendar.getInstance();
                             int ee=calender.get(Calendar.WEEK_OF_YEAR);
@@ -96,13 +103,21 @@ public  class Weekly_update extends AppCompatActivity {
                         }
                         else
                         {
-                            databaseReference = FirebaseDatabase.getInstance().getReference("WEEK WORK").child("week");
+
                         }
+                        */
                         if(!TextUtils.isEmpty(detail)){
+
+
+                            FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
+
+                            FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+
+                            String email=firebaseUser.getEmail();
 
                             String id=databaseReference.push().getKey();
 
-                            Week_detail week_detail=new Week_detail(id,date,detail);
+                            Week_detail week_detail=new Week_detail(id,date,detail,email);
 
                             databaseReference.child(id).setValue(week_detail);
 
@@ -128,16 +143,19 @@ public  class Weekly_update extends AppCompatActivity {
         });
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
 
+        String abc=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        Toast.makeText(this,abc, Toast.LENGTH_SHORT).show();
+        //currentfirebaseuser to uniquely identify the user
+        String currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<Week_detail,Holder>(
                 Week_detail.class,
                 R.layout.list_layout,
                 Holder.class,
-                databaseReference.child("WEEK WORK").child("week")
+                databaseReference.child("WEEK WORK").child("week").child(currentFirebaseUser)
         ) {
             @Override
             protected void populateViewHolder(Holder viewHolder, Week_detail model, int position) {
@@ -204,17 +222,19 @@ public  class Weekly_update extends AppCompatActivity {
                             .show();
                 }
             });
-
         }
+
         public  void setWork(String title)
         {
             TextView post_title=(TextView)mView.findViewById(R.id.tvl1);
             post_title.setText(title);
         }
+
         public  void setDate(String desc)
         {
             TextView post_desc=(TextView)mView.findViewById(R.id.tvl2);
             post_desc.setText(desc);
         }
+
     }
 }

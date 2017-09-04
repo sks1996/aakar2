@@ -54,8 +54,9 @@
             <intent-filter>
                 <action android:name="Send_notification_now" />
             </intent-filter>
-
         </receiver>
+
+        <activity android:name=".Weekly_update_in_project"></activity>
     </application>
 
 </manifest>

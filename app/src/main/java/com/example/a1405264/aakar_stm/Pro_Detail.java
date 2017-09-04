@@ -13,7 +13,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -152,7 +150,7 @@ public class Pro_Detail extends AppCompatActivity {
                         final List<String> areas = new ArrayList<String>();
 
                         for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
-                            String areaName = areaSnapshot.child("name").getValue(String.class);
+                            String areaName = areaSnapshot.child("email").getValue(String.class);
                             areas.add(areaName);
                         }
 
@@ -216,6 +214,7 @@ public class Pro_Detail extends AppCompatActivity {
 
                         ArrayAdapter<String> adapter =
                                 new ArrayAdapter<>(Pro_Detail.this, android.R.layout.simple_spinner_item, areas);
+
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                        // spinner.setAdapter(adapter);
 
@@ -234,12 +233,16 @@ public class Pro_Detail extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        String userId = ref.push().getKey();
+                        for(Map.Entry<Integer,String> entry:Tasks.entrySet())
+                        {
+                                Log.v("Dwijraj", entry.getValue()+",,,");
+                        }
+
 
                         dialog.show();
                         for(Map.Entry<Integer,String> entry:Tasks.entrySet())
                         {
-
+                            String userId = ref.push().getKey();
                             String task1=task.getText().toString().trim();
                             String name1=entry.getValue();
                             String des=desc.getText().toString().trim();

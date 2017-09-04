@@ -75,7 +75,6 @@ public class Task_Assign extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder = new AlertDialog.Builder(mview.getContext(), android.R.style.Theme_Material_Dialog_Alert);
@@ -91,7 +90,6 @@ public class Task_Assign extends AppCompatActivity {
                                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Task").child("task1");
 
                                     String s=((TextView)mview.findViewById(R.id.post_desc)).getText().toString();
-                                    //i want to get the xxx from the listview when i press the screen
                                     //Toast.makeText(mView.getContext(),date1,Toast.LENGTH_LONG).show();
                                     Query applesQuery = ref.orderByChild("desc").equalTo(s);
 

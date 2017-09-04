@@ -4,20 +4,25 @@ public class Week_detail
 
 {
     String id;
-
-
+    String email;
     String work;
     String date;
 
+
     Week_detail()
     {
+
     }
 
-    public Week_detail(String id, String date, String work) {
+    public Week_detail(String id, String date, String work,String email) {
 
         this.id=id;
         this.date=date;
         this.work = work;
+        this.email=email;
+    }
+    public String getEmail() {
+        return email;
     }
 
     public String getId() {
@@ -39,6 +44,8 @@ public class Week_detail
     public void setDate(String date) {
         this.date = date;
     }
+
+
 
 
 
